@@ -7,6 +7,8 @@ jobs:
   metrix-info:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -70,4 +72,4 @@ jobs:
               type: "lead_time"
             } |
             @json' |
-          curl -L -H "Content-Type: application/json" -d @- "https://script.google.com/a/macros/geniee.co.jp/s/AKfycbzvB8y42Myas2ybReAdYx4Z8SonlImAIcpgKiCJ-mzzGJYbueDF4c2pcVd12Zog3HH8Ww/exec"
+          curl -L -H "Content-Type: application/json" -d @- "https://script.google.com/a/macros/geniee.co.jp/s/AKfycbzD0YtygJWk3Xfn5kkchamFM3uhOGKsdQgBJMlqa8iwfQmh16AL49D-sJ1rTAZSGCtk/exec"
