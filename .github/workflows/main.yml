@@ -4,23 +4,23 @@ on:
     types:
       - closed
 jobs:
-  getToken:
-    if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
-    outputs:
-      token: ${{ env.TOKEN }}
-    steps:
-      - name: get token
-        run: |
-          curl \
-            -d client_id=${{ secrets.GAS_CLIENT_ID }} \
-            -d client_secret=${{ secrets.GAS_CLIENT_SECRET }} \
-            -d refresh_token=${{ secrets.GAS_REFRESH_TOKEN }} \
-            -d grant_type=refresh_token \
-            "https://oauth2.googleapis.com/token" |
-          jq -r '"TOKEN=\(.access_token)"' >> $GITHUB_ENV
+  # getToken:
+  #   if: github.event.pull_request.merged == true
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     token: ${{ env.TOKEN }}
+  #   steps:
+  #     - name: get token
+  #       run: |
+  #         curl \
+  #           -d client_id=${{ secrets.GAS_CLIENT_ID }} \
+  #           -d client_secret=${{ secrets.GAS_CLIENT_SECRET }} \
+  #           -d refresh_token=${{ secrets.GAS_REFRESH_TOKEN }} \
+  #           -d grant_type=refresh_token \
+  #           "https://oauth2.googleapis.com/token" |
+  #         jq -r '"TOKEN=\(.access_token)"' >> $GITHUB_ENV
   saveToSpreadSheet:
-    needs: [getToken]
+    # needs: [getToken]
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     env:
@@ -89,9 +89,4 @@ jobs:
                 type: "lead_time"
               }
             } |
-            @json' |
-          curl -L \
-            -H "Authorization: Bearer ${{ needs.getToken.outputs.token }}" \
-            -H "Content-Type: application/json" \
-            -d @- \
-            "https://script.googleapis.com/v1/scripts/AKfycbwUAZzwTLruj-SZ78mPv_lp6eI8QGeVrFwo-xSc-Ble:run"
+            @json'
