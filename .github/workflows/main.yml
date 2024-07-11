@@ -94,4 +94,4 @@ jobs:
             -H "Authorization: Bearer ${{ needs.getToken.outputs.token }}" \
             -H "Content-Type: application/json" \
             -d @- \
-            "https://script.googleapis.com/v1/scripts/AKfycbxXY8yHcjjwP6z2MYDNIhgS3fmCtZQD35doPlIZMaDMGeVu_R2An1a5dGYqpCVr4_qbIg:run"
+            "https://script.googleapis.com/v1/scripts/AKfycbwUAZzwTLruj-SZ78mPv_lp6eI8QGeVrFwo-xSc-Ble:run"
