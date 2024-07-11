@@ -91,7 +91,7 @@ jobs:
             } |
             @json' |
           curl -L \
-            -H "Authorization: ${{ needs.getToken.outputs.token }}" \
+            -H "Authorization: Bearer ${{ needs.getToken.outputs.token }}" \
             -H "Content-Type: application/json" \
             -d @- \
             "https://script.googleapis.com/v1/scripts/AKfycbxXY8yHcjjwP6z2MYDNIhgS3fmCtZQD35doPlIZMaDMGeVu_R2An1a5dGYqpCVr4_qbIg:run"
