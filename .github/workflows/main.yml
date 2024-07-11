@@ -4,7 +4,23 @@ on:
     types:
       - closed
 jobs:
-  metrix-info:
+  getToken:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    outputs:
+      token: ${{ env.TOKEN }}
+    steps:
+      - name: get token
+        run: |
+          curl \
+            -d client_id=${{ secrets.GAS_CLIENT_ID }} \
+            -d client_secret=${{ secrets.GAS_CLIENT_SECRET }} \
+            -d refresh_token=${{ secrets.GAS_REFRESH_TOKEN }} \
+            -d grant_type=refresh_token \
+            "https://oauth2.googleapis.com/token" |
+          jq -r '"TOKEN=\(.access_token)"' >> $GITHUB_ENV
+  saveToSpreadSheet:
+    needs: [getToken]
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     env:
@@ -52,24 +68,30 @@ jobs:
               }
             }
           ' |
-          # tokenで認証を行なっている
           jq -r '.data.node |
             {
-              data: {
-                repository: .repository.name,
-                title: .title,
-                user: .author.login,
-                url: .url,
-                base: .baseRefName,
-                head: .headRefName,
-                firstCommittedAt: .commits.nodes[0].commit.authoredDate,
-                createdAt: .createdAt,
-                firstReviewedAt: .reviews.nodes[0].createdAt,
-                mergedAt: .mergedAt,
-                additions: .additions,
-                deletions: .deletions
-              },
-              type: "lead_time"
+              function: "doPost",
+              parameters: {
+                data: {
+                  repository: .repository.name,
+                  title: .title,
+                  user: .author.login,
+                  url: .url,
+                  base: .baseRefName,
+                  head: .headRefName,
+                  firstCommittedAt: .commits.nodes[0].commit.authoredDate,
+                  createdAt: .createdAt,
+                  firstReviewedAt: .reviews.nodes[0].createdAt,
+                  mergedAt: .mergedAt,
+                  additions: .additions,
+                  deletions: .deletions
+                },
+                type: "lead_time"
+              }
             } |
             @json' |
-          curl -L -H "Content-Type: application/json" -d @- "https://script.google.com/a/macros/geniee.co.jp/s/AKfycbzD0YtygJWk3Xfn5kkchamFM3uhOGKsdQgBJMlqa8iwfQmh16AL49D-sJ1rTAZSGCtk/exec"
+          curl -L \
+            -H "Authorization: ${{ needs.getToken.outputs.token }}" \
+            -H "Content-Type: application/json" \
+            -d @- \
+            "https://script.googleapis.com/v1/scripts/AKfycbxXY8yHcjjwP6z2MYDNIhgS3fmCtZQD35doPlIZMaDMGeVu_R2An1a5dGYqpCVr4_qbIg:run"
