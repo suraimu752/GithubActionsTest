@@ -89,7 +89,7 @@ jobs:
                 type: "lead_time"
               }
             } |
-            @json'
+            @json' |
           curl -L \
             -H "Authorization: Bearer ${{ needs.getToken.outputs.token }}" \
             -H "Content-Type: application/json" \
