@@ -94,4 +94,4 @@ jobs:
             -H "Authorization: Bearer ${{ needs.getToken.outputs.token }}" \
             -H "Content-Type: application/json" \
             -d @- \
-            "https://script.googleapis.com/v1/scripts/AKfycbwXLAZCPpRB9LETSILjci8cFWkLMa63feAI-2RIhJ9jV_wLhtltoeKv7zFiUn4XnugeCw:run"
+            "${{ vars.GAS_API_URL }}"
